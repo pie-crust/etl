@@ -1,0 +1,183 @@
+
+{
+
+"rest":{
+	"IQ_Proc": {	
+		"REST": {		
+			"gaToken"	: ["{optparam_1}", 1],
+			"Var1"		: "rbDate",
+			"rbDate"	: ["{cli*rest_acct_date}", 1],
+			"sourceUrl" : ["http://lp-dbn-borec004.homegroup.com:10030/getRecData/?{Var1}={rbDate}&type=POSITION&gaToken={gaToken}", 3]
+			}
+		}	
+	},
+"target":{
+	"IQ_Proc": {	
+		"IQ": {
+			"targetDb"			: "IQ_DEV",
+			"accountingDate"	: ["{optparam_0}", 1],
+			"accountingDateFmt"	: "%Y/%m/%d",
+
+			"targetTablePrefix"	: "RC_Break_Position",
+			"targetTableFmt"	: ["{targetTablePrefix}_{cli*acct_year}_{cli*acct_mon}", 3],
+			"targetTable"		: "",
+
+			"targetSchema"		: "Position",
+
+			"insertStmt"		: ["INSERT INTO {targetSchema}.{targetTable} ({cli*to_cols}) values ({cli*to_quotes})", 4],
+			
+			"preCountTableStmt"	: ["SELECT count(*) cnt FROM {targetSchema}.{targetTablePrefix} WHERE AsOfDateTime < '{cli*asod}' AND AccountingDate = '{optparam_0}' ", 4],
+			"preCountTablePartitionStmt"	: ["SELECT count(*) cnt FROM {targetSchema}.{targetTable} WHERE AsOfDateTime < '{cli*asod}' AND AccountingDate = '{optparam_0}' ", 4],
+			"afterCountStmt"	: ["SELECT count(*) cnt FROM {targetSchema}.{targetTable} WHERE AsOfDateTime = '{cli*asod}' AND AccountingDate = '{optparam_0}' ", 4],
+			"purgeStmt"			: ["DELETE from {targetSchema}.{targetTable} WHERE AsOfDateTime < '{cli*asod}' AND AccountingDate = '{optparam_0}' ", 4],
+			"rollbackStmt"		: ["DELETE from {targetSchema}.{targetTable} WHERE AsOfDateTime = '{cli*asod}' AND AccountingDate = '{optparam_0}' ", 4],
+			"monthEndStmt"		: ["SELECT MAX(DailyDate) as MonthEndDate FROM CIGRptV.DailyDate WHERE IsWeekday = 1   AND ((Month(DailyDate) = 12 and Year(DailyDate)= Year(getdate())-1 and  Month(getdate()) =1) or    (Month(DailyDate) = Month(getdate()) -1 and  Year(DailyDate)= Year(getdate()) and Month(getdate()) >1) ) GROUP BY Year(DailyDate),Month(DailyDate) ORDER BY 1",0],
+
+			"insertChunkSize"	: 900,
+			"ignoreSourceColumns" : [],
+
+
+			"columnMap"	: {
+
+				"Age":				["Age", 			"varchar"	],
+				"AgeGroup":			["AgeGroup", 		"varchar"	],
+				"asOfDate":			["AsOfDate", 		"varchar"	],
+				"autoReasonCode":	["AutoReasonCode", 	"varchar"	],
+				"BaseMarketValue":	["BaseMarketValue", "varchar"	],
+				"BaseMarketValueCurrency":	["BaseMarketValueCurrency", 	"varchar"	],
+				"BreakCategory":	["BreakCategory", 	"varchar"	],
+				"breakColumns":		["BreakColumns", 	"varchar"	],
+				"BreakID":			["BreakID", 		"varchar"	],
+				"BreakInceptionAsOfDate":	["BreakInceptionAsOfDate", 	"varchar"	],
+				"breakRoutedDate":	["BreakRoutedDate", "varchar"	],
+				"breakStartDate":	["BreakStartDate", 	"varchar"	],
+				"breakStatus":		["BreakStatus", 	"varchar"	],
+				"BusinessSide":		["BusinessSide", 	"varchar"	],
+				"account":			["Account", 		"varchar"	],
+				"CCYLongNotional":	["CCYLongNotional", "varchar"	],
+				"CCYShortNotional":	["CCYShortNotional","varchar"	],
+				"clientName":		["ClientName", 		"varchar"	],
+				"product":			["Product", 		"varchar"	],
+				"crossTeamNote":	["CrossTeamNote", 	"varchar"	],
+				"Currency":			["CurrencyISO", 	"varchar"	],
+				"CUSIP":			["CUSIP", 			"varchar"	],
+				"dataID":			["DataID", 			"varchar"	],
+				"EffectiveDate":	["EffectiveDate", 	"varchar"	],
+				"EndMatchID":		["EndMatchID", 		"varchar"	],
+				"expectedResolutionDate":	["ExpectedResolutionDate", 	"varchar"	],
+				"FactorNotional":	["FactorNotional", 	"varchar"	],
+				"FinancialType":	["FinancialType", 	"varchar"	],
+				"FxRate":			["FXRate", 			"varchar"	],
+				"groupHouseCnt":	["GroupHouseCnt", 	"varchar"	],
+				"groupID":			["GroupID", 		"varchar"	],
+				"groupID_Annotation":	["GroupID_Annotation", 	"varchar"	],
+				"groupStatus":		["GroupStatus", 	"varchar"	],
+				"hash":				["HashKey", 		"varchar"	],
+				"InstrumentID":		["InstrumentID", 	"varchar"	],
+				"ISIN":				["ISIN", 			"varchar"	],
+				"IsRoutableBreak":	["IsRoutableBreak", "varchar"	],
+				"lastMsgFrom":		["LastMsgFrom", 	"varchar"	],
+				"Layer":			["Layer", 			"varchar"	],
+				"loadID":			["LoadID", 			"varchar"	],
+				"LocalMarketValue":	["LocalMarketValue","varchar"	],
+				"LocalMarketValueCurrency":	["LocalMarketValueCurrency", 	"varchar"	],
+				"LongNotional":		["LongNotional", 	"varchar"	],
+				"MANANotes":		["MANANotes", 		"varchar"	],
+				"MANAReasonCode":	["MANAReasonCode", 	"varchar"	],
+				"MANARoutingGroup":	["MANARoutingGroup","varchar"	],
+				"MD5RecordChecksum":["MD5RecordChecksum", 	"varchar"	],
+				"ModifiedBy":		["ModifiedBy", 		"varchar"	],
+				"ModifiedTime":		["ModifiedTime", 	"varchar"	],
+				"noteID":			["NoteID", 			"varchar"	],
+				"Notional":			["Notional", 		"varchar"	],
+				"Notional_USD":		["Notional_USD", 	"varchar"	],
+				"NotionalFlag":		["NotionalFlag", 	"varchar"	],
+				"NotionalWithPnL":	["NotionalWithPnL", "varchar"	],
+				"NotionalWithPnL_USD":	["NotionalWithPnL_USD", 	"varchar"	],
+				"passName":			["PassName", 		"varchar"	],
+				"Position":			["Position", 		"varchar"	],
+				"Qty":				["Qty", 			"varchar"	],
+				"RBID":				["RBID", 			"varchar"	],
+				"RBStatus":			["RBStatus", 		"varchar"	],
+				"RecID":			["RecID", 			"varchar"	],
+				"resolutionDate":	["ResolutionDate", 	"varchar"	],
+				"RNCAge":			["RNCAge", 			"varchar"	],
+				"RNCNote":			["RNCNote", 		"varchar"	],
+				"RNCReasonCode":	["RNCReasonCode", 	"varchar"	],
+				"RNCRoutingTeam":	["RNCRoutingTeam", 	"varchar"	],
+				"RNCupdateTime":	["RNCupdateTime", 	"varchar"	],
+				"RNCupdateTime":	["RNCupdateTime", 	"varchar"	],
+				"RNCuserName":		["RNCuserName", 	"varchar"	],
+				"Security":			["Security", 		"varchar"	],
+				"SecurityDescription":	["SecurityDescription", 	"varchar"	],
+				"Sedol":			["Sedol", 		"varchar"	],
+				"SettlePrice":		["SettlePrice", 	"varchar"	],
+				"SettlePriceCCY":	["SettlePriceCCY", 	"varchar"	],
+				"ShortNotional":	["ShortNotional", 	"varchar"	],
+				"SSGNote":			["SSGNote", 		"varchar"	],
+	
+				"SSGReason":		["SSGReason", 		"varchar"	],
+				"SSGTeamName":		["SSGTeamName", 	"varchar"	],
+				"SSGUpdateTime":	["SSGupdateTime", 	"varchar"	],
+				
+				
+				"SubAccount":		["SubAccount", 		"varchar"	],
+				"TradeDate":		["TradeDate", 		"varchar"	],
+				"TradeFactor":		["TradeFactor", 	"varchar"	],
+				"TradePrice":		["TradePrice", 		"varchar"	],
+				"UnderlierCountry":	["UnderlierCountry","varchar"	],
+				"UnderlierCurrency":["UnderlierCurrency","varchar"	],
+				"TotalVolume":		["TotalVolume", 	"varchar"	],
+				"Rebate":			["Rebate", 			"varchar"	],
+				"AccountSubType":	["AccountSubType", 			"varchar"	],
+				"BB_YK_IDENTIFIER":	["BB_YK_IDENTIFIER", 		"varchar"	],
+				"BrokerNetSettlement":	["BrokerNetSettlement", "varchar"	],
+				"ClearingAccount":	["ClearingAccount", 		"varchar"	],
+				"FundBaseCurrency":	["FundBaseCurrency", 		"varchar"	],
+				"groupBrokerCnt":	["GroupBrokerCnt", 			"varchar"	],
+				"GtxTransactionType":	["GtxTransactionType", 	"varchar"	],
+				"HouseNetSettlement":	["HouseNetSettlement", 	"varchar"	],
+				"ID_BB_UNIQUE":		["ID_BB_UNIQUE", 		"varchar"	],
+				"JournalID":		["JournalID", 			"varchar"	],
+				"JournalType":		["JournalType", 		"varchar"	],
+				"LedgerType":		["LedgerType", 			"varchar"	],
+				"MultiplicationFactorBase":	["MultiplicationFactorBase", 	"varchar"	],
+				"MultiplicationFactorUSD":	["MultiplicationFactorUSD", 	"varchar"	],
+				"NetSettlement":	["NetSettlement", 		"varchar"	],
+				"NetSettlementBase":["NetSettlementBase", 	"varchar"	],
+				"NetSettlementUSD":	["NetSettlementUSD", 	"varchar"	],
+				"NextResetDate":	["NextResetDate", 		"varchar"	],
+				"NextResetSettlementDate":	["NextResetSettlementDate", 	"varchar"	],
+				"Notes":				["Note", 				"varchar"	],
+				"PriceRegion":		["PriceRegion", 		"varchar"	],
+				"PriorPeriodResolutionDate":	["PriorPeriodResolutionDate","varchar"	],
+				"REUTERS":			["REUTERS", 			"varchar"	],
+				"ResetCurrency":	["ResetCurrency", 		"varchar"	],
+				"ReversalRebook":	["ReversalRebook", 		"varchar"	],
+				"RolledupEndDate":	["RolledupEndDate", 	"varchar"	],
+				"RolledupStartDate":["RolledupStartDate", 	"varchar"	],
+				"SSGowner":			["SSGOwner", 			"varchar"	],
+
+				"SSGUserName":		["SSGuserName", 		"varchar"	],
+				"SettleDate":		["SettleDate", 			"varchar"	],
+				"SideType":			["SideType", 			"varchar"	],
+				"SortOrder":		["SortOrder", 			"varchar"	],
+				"TICKER":			["TICKER", 				"varchar"	],
+				"TRSEffectiveDate":	["TRSEffectiveDate", 	"varchar"	],
+				"Tkey":				["Tkey", 				"varchar"	],
+				"TkeyVersion":		["TkeyVersion", 		"varchar"	],
+				"TransactionNote":	["TransactionNote", 	"varchar"	],
+				"TransactionType":	["TransactionType", 	"varchar"	],
+
+	 
+	 
+	 
+				"AccountingDate":	["AccountingDate", 	"datetime", ["{optparam_0}",1]],
+				"AsOfDateTime"	:	["AsOfDateTime", 	"datetime", ["{cli*asod}", 	1]]
+			}
+		}
+	}
+}
+
+
+}

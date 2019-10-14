@@ -1,0 +1,74 @@
+{
+
+"dump":{
+	"IQ_Proc": {
+		"Dir": {
+			"dumpDir"		: ["/auto/fina-datadev/share/PositionModel/{cli*tss}", 1],
+			"dumpFileFormat": ["{cli*_source}.{source*sourceDb}.{source*procName}.{target*targetTable}.csv", 4],
+			
+			"recordDelimiter"	: "\n",
+			"columnDelimiter"	: "|",
+			
+			"writeHeader"		: 0,
+				"headerFormat"		: "column",
+				"translateType"		: {"<type 'int'>": "int", "<type 'long'>": "long", "<type 'float'>": "float", "<type 'str'>": "varchar",  "<type 'datetime.datetime'>": "timestamp"}
+			}
+		}
+	},
+		
+"target":{
+	"IQ_Proc": {	
+		"IQ": {
+			"targetDb"			: "IQ_DEV",
+			"targetTable"		: "ME_Position_SD",
+
+			"targetSchema"		: "Position",
+			"purgeStmt0"		: ["DELETE from {targetSchema}.{targetTable} WHERE AsOfDateTime < '{cli_asod}' AND AccountingDate = '{colparam_AccountingDate}' AND Client='{colparam_Client}' AND PosType = '{colparam_PosType}' AND Stage = '{colparam_Stage}' ", 7],
+			"targetColumns0"	: "TransactionId,SettleDate,TransactionTypeCode,ClearedDate,CloseDate,CloseLeg, QuantityType,Quantity,AccountingDate,AsOfDateTime",
+			
+			"insertStmt"		: ["INSERT INTO {targetSchema}.{targetTable} ({cli*to_cols}) values ({cli*to_quotes})", 4]
+		}
+	}
+},
+
+"source":{
+	"IQ_Proc": {
+		"IQ": {
+			"sourceDb": "IQ_PROD", 
+			"procName": "CIGActgH.spSettleDatePosition_WRAPPER",	
+			"sourceStmt":  [ "SET TEMPORARY OPTION DATE_ORDER=MDY exec {procName} '{cli*paramlist}'",
+									2],			
+			"columnMappings": [
+					{ "columnName": "Account", "value": "Map" },
+					{ "columnName": "PSLocalCurrencyCode", "value": "Map" },
+					{ "columnName": "Subaccount", "value": "Map" },
+					{ "columnName": "FinancialType", "value": "Map" },
+					{ "columnName": "Instrument", "value": "Map" },
+					{ "columnName": "InstrumentDesc", "value": "Map" },
+					{ "columnName": "TradeFactor", "value": "Map" },
+					{ "columnName": "SDQty", "value": "Map" },
+					{ "columnName": "SDCurrentQty", "value": "Map" },
+					{ "columnName": "LongShort_E", "value": "Map" },
+					{ "columnName": "SDMV", "value": "Map" },
+					{ "columnName": "Fx", "value": "Map" },
+					{ "columnName": "BaseSDMV", "altColName":"ISNULL(T.SDMV,0.0)*T.FX", "value": "Map" },
+					{ "columnName": "PositionID", "value": "Map" },
+					{ "columnName": "BusinessUnitID", "value": "Map" },
+					{ "columnName": "TRSInstrument", "value": "Map" },
+					{ "columnName": "TRSInstrumentDesc", "value": "Map" },
+					{ "columnName": "NotionalFlag_E", "value": "Map" },
+					{ "columnName": "SwapType_E", "value": "Map" },
+					{ "columnName": "Price", "value": "Map" },
+					{ "columnName": "PriceSource", "value": "Map" },
+					{ "columnName": "LastID", "value": "Map" },
+					{ "columnName": "LastModified", "value": "Map" },
+					{ "columnName": "AccountingDate", "value": "Param", "sourceParam": "-accDate", "sourceParamIndex": 1 },
+					{ "columnName": "PosType", "value": "Param", "sourceParam": "-posType", "sourceParamIndex": 3 },
+					{ "columnName": "Stage", "value": "Param", "sourceParam": "-stage", "sourceParamIndex": 2 },
+					{ "columnName": "AsOfDateTime", "value": "Default", "valueType": "TimeStamp" },
+					{ "columnName": "Client", "value": "Param", "sourceParam": "-client", "sourceParamIndex": 0 }
+				]
+			}
+		}
+	}
+}

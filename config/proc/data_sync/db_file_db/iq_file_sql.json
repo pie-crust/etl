@@ -1,0 +1,36 @@
+{	
+	"source":{
+		"IQ_DEV":{
+			"sourceDb"	: "IQ",
+			"sourceStmt": [ "SELECT  * FROM {optparam_0} {optparam_1}", 2 ] 
+			}
+		},
+
+	"dump":{
+		"IQ_DEV": {
+			"dumpDir"		: ["./dump/delta_dumps/{cli*tss}", 1],
+			"dumpFileFormat": ["{cli*_source}_{cli*tss}.csv", 2],
+			
+			"recordDelimiter"	: "\n",
+			"columnDelimiter"	: "|",
+			
+			"writeHeader"		: 0,
+				"headerFormat"		: "column",
+				"translateType"		: {"<type 'int'>": "int", "<type 'long'>": "long", "<type 'float'>": "float", "<type 'str'>": "varchar",  "<type 'datetime.datetime'>": "timestamp"}
+			}
+		},
+
+	"target":{
+		"IQ_DEV":{
+			"SQLServer_DEV": {
+				"targetDb"			: "SQLServer",
+				"targetStagingDb"	: "DataStaging",
+				"targetSchema"		: "dbo",
+				"escapeChars"		: {"'":"''"},
+				"targetTable"		: ["{optparam_2}", 1],
+				"insertStmt"		: ["INSERT INTO {targetTable} ({cli*to_cols}) values ({cli*to_quotes})", 3]
+			}
+		}
+	}
+	
+}

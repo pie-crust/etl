@@ -1,0 +1,89 @@
+{	
+"s3":{
+	"PNL":{
+		"S3StreamLoader":{
+			"targetBucket":{"env_var": "DB_SNOWFLAKE_BUCKET"},
+			"targetDir": "racct",
+			"maxRecordsInFile": 200000,
+			"writeBufferSize": 100000
+			}
+		}
+	},
+"target":{
+	"PNL":{
+		"Snowflake":{
+			"targetDb"			: "Snowflake",
+			"targetTable"		: "DY_DeskPLRSRange03",
+			"targetStage"		: {"env_var": "DB_SNOWFLAKE_STAGE"},
+			"targetWarehouse"	: "LOAD_WH",
+			"targetRole"		: "AccountingBI_W",
+			"targetDatabase"	: "ACCOUNTINGBI",
+			"targetSchema"		: "PL_HIST",
+			"targetStageSchema"	: "POSITION",
+			"purgeStmt"			: ["DELETE from {targetSchema}.{targetTable} WHERE  AccountingDate = '{optparam_1}' AND ClientId='{colparam_ClientId}' ", 4],
+			"copyStmt"			: ["COPY INTO {targetSchema}.{targetTable} FROM '@{targetStageSchema}.{targetStage}/{targetTable}/'FILES=('{cli*files}')",6]
+		}
+	}
+},
+"source":{
+	"PNL":{
+		"IQ":{
+			"sourceDb": "IQ", 
+			"procName": "CIGActgH.spDeskPLBUC_Inner_Range_01_WRAPPER",	
+			"sourceStmt":  [ "SET TEMPORARY OPTION DATE_ORDER=MDY exec {procName} '{cli*paramlist}'", 2],
+			"columnMappings":  [
+				{ "columnName": "ACCOUNTINGDATE", "altColName":"StageDate", "value": "Map" },
+				{ "columnName": "FUNDID", "value": "Map" },
+				{ "columnName": "FUND", "value": "Map" },
+				{ "columnName": "BUSINESSUNITID", "value": "Map" },
+				{ "columnName": "BUSINESSUNIT", "value": "Map" },
+				{ "columnName": "DESKCODE", "value": "Map" },
+				{ "columnName": "DESK", "value": "Map" },
+				{ "columnName": "POSITIONBLOCKID", "value": "Map" },
+				{ "columnName": "POSITIONBLOCK", "value": "Map" },
+				{ "columnName": "INSTRUMENTID", "value": "Map" },
+				{ "columnName": "INSTRUMENT", "value": "Map" },
+				{ "columnName": "INSTRUMENTDESC", "value": "Map" },
+				{ "columnName": "FINANCIALTYPECODE", "value": "Map" },
+				{ "columnName": "FINANCIALTYPE", "value": "Map" },
+				{ "columnName": "CURRENCYID", "value": "Map" },
+				{ "columnName": "CURRENCY", "value": "Map" },
+				{ "columnName": "SECTOR", "value": "Map" },
+				{ "columnName": "MANAGEMENTCOMMITTEEROLLUPID", "value": "Map" },
+				{ "columnName": "MANAGEMENTCOMMITTEEROLLUP", "value": "Map" },
+				{ "columnName": "STRATEGYCODE", "value": "Map" },
+				{ "columnName": "STRATEGY", "value": "Map" },
+				{ "columnName": "TRADERNAME", "value": "Map" },
+				{ "columnName": "QUANTITY", "value": "Map" },
+				{ "columnName": "TRADEFACTOR", "value": "Map" },
+				{ "columnName": "FX", "value": "Map" },
+				{ "columnName": "PRICE", "value": "Map" },
+				{ "columnName": "COSTLOCAL", "value": "Map" },
+				{ "columnName": "COST", "value": "Map" },
+				{ "columnName": "MV", "value": "Map" },
+				{ "columnName": "DTD_MTM", "value": "Map" },
+				{ "columnName": "DTD_INTEREST", "value": "Map" },
+				{ "columnName": "DTD_REPOINTEREST", "value": "Map" },
+				{ "columnName": "DTD_DIVIDENDINTEREST", "value": "Map" },
+				{ "columnName": "DTD_BANKDEBTFEE", "value": "Map" },
+				{ "columnName": "DTD_PORTFOLIOFINANCECTC", "value": "Map" },
+				{ "columnName": "DTD_MISCELLANEOUSCTC", "value": "Map" },
+				{ "columnName": "DTD_BACKOFFICECHARGES", "value": "Map" },
+				{ "columnName": "DTD_ISTCOMMISSIONS", "value": "Map" },
+				{ "columnName": "DTD_TOTALPL", "value": "Map" },
+				{ "columnName": "STRATEGYGROUP", "value": "Map" },
+				{ "columnName": "BUSINESSLINE_KEY", "value": "Map" },
+				{ "columnName": "STRATEGYSUBGROUP", "value": "Map" },
+				{ "columnName": "MASTERREGION", "value": "Map" },
+				{ "columnName": "PBTYPE", "value": "Map" },
+				{ "columnName": "ALLOCATIONMETHOD", "value": "Map" },
+				{ "columnName": "ALLOCATIONREFERENCE", "value": "Map" },
+				{ "columnName": "PARENTPB", "value": "Map" },
+					{ "columnName": "AsOfDateTime", "value": "Default", "valueType": "TimeStamp" },
+					{ "columnName": "ClientId", "value": "Param", "sourceParam": "-client", "sourceParamIndex": 0 }
+					
+				]
+			}
+		}
+	}
+}

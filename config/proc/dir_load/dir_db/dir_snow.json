@@ -1,0 +1,36 @@
+{
+
+"source":{
+	"IQ_DEV": {
+		"Dir": {
+			"dumpDir"		: ["{optparam_0}", 1],
+			"dumpFileFormat": ["{cli*_source}_{cli*tss}.csv", 2],
+			
+			"recordDelimiter"	: "\n",
+			"columnDelimiter"	: ",",
+			
+			"writeHeader"		: 0,
+				"headerFormat"		: "column",
+				"translateType"		: {"<type 'int'>": "int", "<type 'long'>": "long", "<type 'float'>": "float", "<type 'str'>": "varchar",  "<type 'datetime.datetime'>": "timestamp"}
+		}
+	}
+},
+"target":{
+	"IQ_DEV": {	
+		"Snowflake": {
+			"targetDb"			: "Snowflake",
+			"targetTable"		: "DY_FiccDistribution",
+			"targetStage"		: "POSITION_MODEL_STAGE_TEST_2",
+			"targetRole"		: "AccountingBI_W",
+			"targetWarehouse"	: "LOAD_WH",
+			"targetDatabase"	: "ACCOUNTINGBI",
+			"targetSchema"		: "POSITION",
+			"purgeStmt"			: ["DELETE from {targetSchema}.{targetTable} WHERE AsOfDateTime < '{cli_asod}' AND AccountingDate = '{colparam_AccountingDate}' AND Client='{colparam_Client}' AND PosType = '{colparam_PosType}' AND Stage = '{colparam_Stage}' ", 7],
+			"targetColumns"		: "TransactionId,SettleDate,TransactionTypeCode,ClearedDate,CloseDate,CloseLeg, QuantityType,Quantity,AccountingDate,AsOfDateTime",
+			
+			"quotes"			: "?,?,?,?,?,?,?,?,?,?",
+			"insertStmt"		: ["INSERT INTO {targetSchema}.{targetTable} ({targetColumns}) values ({quotes})", 4]
+		}
+	}
+}
+}

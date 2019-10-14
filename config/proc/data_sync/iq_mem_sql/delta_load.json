@@ -1,0 +1,13 @@
+{	
+	"source":{
+		"sourceDb": "IQ",
+		"sourceStmt"	: [ "SELECT * FROM {optparam_0} {optparam_1}", 2]
+			},
+
+	"target":{
+		"targetDb"			: "SQLServer",
+		"targetStagingDb"	: "DataStaging",
+		"targetSchema"		: "dbo",
+		"insertStmt"		: ["INSERT INTO {optparam_2} ({cli*to_cols}) values ({cli*to_quotes})", 3]
+		}
+}

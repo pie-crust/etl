@@ -1,0 +1,14 @@
+{	
+
+	"source":{		
+		"skipHeader"		 : 0,
+		"recordDelimiter"	 : "\n",
+		"columnDelimiter"	 : "|",
+		"headerFormat"		 : "column:type"
+	},
+	"target":{
+		"targetDb"			: "SQLite",	
+		"targetTable"		: "teardown",
+		"insertStmt"		: ["INSERT INTO {targetTable} ({cli*to_cols}) values ({cli*to_quotes})", 3]
+		}
+}

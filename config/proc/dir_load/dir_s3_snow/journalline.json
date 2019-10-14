@@ -1,0 +1,27 @@
+{	
+	"s3":{
+		"targetBucket": {"env_var": "DB_SNOWFLAKE_BUCKET"},
+		"targetDir": "racct",
+		"maxRecordsInFile": 300000,
+		"writeBufferSize": 300000
+		},
+	"target":{
+		"targetDb"			: "Snowflake",
+		"targetStage"		: {"env_var": "DB_SNOWFLAKE_STAGE"},
+		"targetWarehouse"	: "LOAD_WH",
+		"targetRole"		: "AccountingBI_W",
+		"targetDatabase"	: "ACCOUNTINGBI",
+		"targetSchema"		: "Subledger",
+		"targetStageSchema"	: "POSITION",
+		"targetTable"		: "acct_journalline_test_2",
+		"copyStmt"			: ["COPY INTO {targetSchema}.{targetTable} FROM '@{targetStageSchema}.{targetStage}/{cli*file_location}/' FILES=('{cli*files}')",6]
+		},
+	"source":{		
+		"skip_header"		 : 1,
+		"record_delimiter"	 : "\r\n",
+		"sourceTables"		 : ["acct_journalline_test"], 
+		"tableColumns"		 : {
+			"acct_journalline_test" : [ "ID","ACCOUNTINGDATE","EXTERNALSOURCEID","EXTERNALREFERENCEID","EXTERNALREFERENCEVERSION","JOURNALTYPEID","JOURNALVERSION","ACCOUNTID","SUBACCOUNTCODE","INSTRUMENTID","TRSINSTRUMENTID","VALUATIONCURRENCYID","GLBUSINESSUNITCODE","GLCOUNTERPARTYCODE","DEPARTMENTID","SUBFUNCTIONID","PROJECTID","AFFILIATEGLBUSINESSUNITCODE","TXMASTERID","TXDETAILVERSION","ACCOUNTINGSIDETYPECODE","LOCALAMOUNT","POSTINGCURRENCY","BASEAMOUNT","GLACCOUNTCODE","REVERSALREBOOKINDICATOR","REVERSALREBOOKDATE","POSTINGRULEID","KNOWLEDGEDATE","JOURNALSOURCECODE","APPROVALSTATUS","TRADEDATE","SETTLEDATE","QUANTITY","COST","TRADEFACTOR","FX","REFERENCETYPEID","CONTRACTTYPEID","ISCOLLATERAL","CLOCK_TIMESTAMP","LOTID","LOTSEQUENCENUMBER","TXTYPECODE","ISPL"]
+		}
+	}
+}

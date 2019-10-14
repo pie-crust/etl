@@ -1,0 +1,44 @@
+{
+
+"dump":{
+	"gtx": {
+		"Dir": {
+			"dumpDir"			: ["{optparam_0}", 1],
+			"dumpFileFormat"	: ["{cli*_source}_{cli*tss}.csv", 2],
+			
+			
+			"recordDelimiter"	: "\n",
+			"columnDelimiter"	: "|",
+			
+			"writeHeader"		: 2,
+				"headerFormat"	: {"line1":"column", "line2": "type"},
+				"translateType"	: {"<type 'int'>": "int", "<type 'long'>": "long", "<type 'float'>": "float", "<type 'str'>": "varchar",  "<type 'datetime.datetime'>": "timestamp"}
+		}
+	}
+},
+
+"target":{
+
+	"gtx": {	
+		"Vertica": {
+			"targetDb"			: "Vertica",
+			"targetTable"		: ["DY_Position_SD", 0],
+			"targetSchema"		: "CIGRpt",
+			
+			"insertStmt"		: ["INSERT INTO {targetSchema}.{targetTable} ({cli*to_cols}) values ({cli*to_quotes})", 4],
+			"SnapMoveLocation"	: "rdm/snowflakeload/updates_NEW/"
+		}
+	},
+
+	"_gtx": {	
+		"SQLite": {
+			"targetDb"			: "SQLite",	
+			"_targetTable"		: "DY_DeskPLRSRange03",
+			"targetLiteDir"		: [ "dump/lite/gtx/", 0 ],
+			"insertStmt"		: ["INSERT INTO {targetTable} ({cli*to_cols}) values ({cli*to_quotes})", 3]
+		}
+		
+	}
+}
+
+}

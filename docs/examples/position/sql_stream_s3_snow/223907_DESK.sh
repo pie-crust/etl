@@ -1,0 +1,25 @@
+alias python=~/python27/bin/python
+
+#DY_Position_SD
+time python cli.py -nopp 18 -dcf config/db_config.DEV.json -pcf config/proc/pos/sql_stream_s3_snow/DY_Position_SD.json --proc_params  \
+223907 05/31/2019 'EOD' 'DESK' "HORZ" "*" "*" "*" "*" "*" "*" "*" "*" "*" "*" "*" "*" "*" \
+ 2>&1| tee DY_Position_SD.log
+
+#ME_Position_SD
+time python cli.py -nopp 18 -dcf config/db_config.DEV.json -pcf config/proc/pos/sql_stream_s3_snow/ME_Position_SD.json --proc_params \
+223907 05/31/2019 'EOD' 'DESK' "HORZ" "*" "*" "*" "*" "*" "*" "*" "*" "*" "*" "*" "*" "*" \
+ 2>&1| tee ME_Position_SD.log
+
+
+#DY_Position_TD
+time python cli.py -nopp 27  -dcf config/db_config.DEV.json -pcf config/proc/pos/sql_stream_s3_snow/DY_Position_TD.json --proc_params \
+223907 'EOD' '05/31/2019' 'DESK' 'HORZ' 'DEFAULT' 'REGULAR' '1' '0' 'NONE' '*' '*' 'N' '0' '0' 'NONE' 'NONE' 'ALL' '0' 'MONTH_END' 'N' 'ALL' '*' '0' '*' 'N' '*' \
+-ld 100
+ 2>&1| tee DY_Position_TD.log
+
+
+#ME_Position_TD
+time python cli.py -nopp 27  -dcf config/db_config.DEV.json -pcf config/proc/pos/sql_stream_s3_snow/ME_Position_TD.json --proc_params \
+223907 'EOD'  '05/31/2019' 'DESK' 'HORZ' 'DEFAULT' 'REGULAR' '1' '0' 'NONE' '*' '*' 'N' '0' '0' 'NONE' 'NONE' 'ALL' '0' 'FULL' 'N' 'ALL' '*' '0' '*' 'Y' '*' \
+-ld 100
+ 2>&1| tee ME_Position_TD.log

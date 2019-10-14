@@ -1,0 +1,50 @@
+{
+"source":{
+	"IQ_Proc": {
+		"IQ": {	
+			"sourceDb": "IQ_DEV",
+			"sourceSchema"	: "Position",
+			"sourceTable"	: "DY_FinancingPosition",
+			"RefCode_sourceStmt": [ "SELECT REPLACE(ReferenceCode,'FT','') as TxID FROM {sourceSchema}.{sourceTable} WHERE ReferenceType = '{optparam_0}' AND BusinessUnit IN ('CDRG','PALA') AND AccountingDate = '{optparam_1}' GROUP BY ReferenceCode ORDER BY 1",
+								4]
+			}
+		}
+	},
+"rest":{
+	"IQ_Proc": {	
+		"REST": {		
+			"sourceUrl": "http://gclr-api-prod:9999/api/ficcnetdistribution/post/query"
+			}
+		}	
+	},
+"target":{
+	"IQ_Proc": {	
+		"IQ": {
+			"targetDb"		: "IQ_DEV",
+			"targetTable"	: "DY_FiccDistribution",
+
+			"targetSchema"	: "Position",
+			
+			"insertStmt"	: ["INSERT INTO {targetSchema}.{targetTable} ({cli*to_cols}) values ({cli*to_quotes})", 4],
+			"columnMap"	: { 
+				"ClearedDate":	["clearedDate", "datetime"	], 
+				"CloseLeg":		["closeLeg",	"int"		], 
+				"CloseDate":	["closedDate", 	"datetime"	],
+				"Quantity":		["quantity", 	"int"		], 
+				"QuantityType":	["quantityType","varchar"	], 
+				"SettleDate":	["settleDate", 	"datetime"	], 
+				"TransactionId":["txnTransactionID","int"	], 
+				"AsOfDateTime": ["AsOfDateTime","datetime"	],
+				"AccountingDate":		["AccountingDate", "datetime"	], 
+				"TransactionTypeCode":	["transactionTypeCode","varchar"]},
+				
+			"columnXref"	: { "ClearedDate":["clearedDate", "datetime"], "CloseLeg":["closeLeg","int"], "CloseDate":["closedDate", "datetime"],
+								"Quantity":["quantity", "int"], "QuantityType":["quantityType", "varchar"], "TransactionTypeCode":["transactionTypeCode","varchar"], 
+								"SettleDate":["settleDate", "datetime"], "TransactionId":["txnTransactionID","int"], "AccountingDate":["AccountingDate", "datetime"], 
+								"AsOfDateTime":["AsOfDateTime", "datetime"]}
+		}
+	}
+}
+	
+}
+

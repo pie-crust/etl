@@ -1,0 +1,98 @@
+{	
+
+"target":{
+	"IQ_Proc": {
+		"IQ": {
+			"targetDb"			: "IQ_DEV",
+			"targetTable"		: "DY_DeskPLRSRange03",
+			"targetSchema"		: "Position",
+			
+			"purgeStmt0"		: ["DELETE from {targetSchema}.{targetTable} WHERE AsOfDateTime < '{cli_asod}' AND AccountingDate = '{colparam_AccountingDate}' AND Client='{colparam_Client}' AND PosType = '{colparam_PosType}' AND Stage = '{colparam_Stage}' ", 7],
+			"targetColumns0"	: "TransactionId,SettleDate,TransactionTypeCode,ClearedDate,CloseDate,CloseLeg, QuantityType,Quantity,AccountingDate,AsOfDateTime",
+			
+			"insertStmt"		: ["INSERT INTO {targetSchema}.{targetTable} ({cli*to_cols}) values ({cli*to_quotes})", 4]
+		}
+	}
+},
+
+
+"dump":{
+	"IQ_Proc": {
+		"Dir": {
+			"dumpDir"		: ["/auto/fina-datadev/share/PositionModel/{cli*tss}", 1],
+			"dumpFileFormat": ["{cli*_source}.{source*sourceDb}.{source*procName}.{target*targetTable}.csv", 4],
+			
+			"recordDelimiter"	: "\n\r",
+			"columnDelimiter"	: "^",
+			
+			"writeHeader"		: 1,
+				"headerFormat"		: "column",
+				"translateType"		: {"<type 'int'>": "int", "<type 'long'>": "long", "<type 'float'>": "float", "<type 'str'>": "varchar",  "<type 'datetime.datetime'>": "timestamp"},
+				"terminateFile" : 1
+			}
+		}
+	},
+
+
+"source":{
+	"IQ_Proc":{
+		"IQ":{
+			"sourceDb": "IQ_DEV", 
+			"procName": "CIGActgH.spDeskPLBUC_Inner_Range_01_WRAPPER",	
+			"sourceStmt":  [ "SET TEMPORARY OPTION DATE_ORDER=MDY exec {procName} '{cli*paramlist}'", 2],
+			"columnMappings":  [
+				{ "columnName": "ACCOUNTINGDATE", "altColName":"StageDate", "value": "Map" },
+				{ "columnName": "FUNDID", "value": "Map" },
+				{ "columnName": "FUND", "value": "Map" },
+				{ "columnName": "BUSINESSUNITID", "value": "Map" },
+				{ "columnName": "BUSINESSUNIT", "value": "Map" },
+				{ "columnName": "DESKCODE", "value": "Map" },
+				{ "columnName": "DESK", "value": "Map" },
+				{ "columnName": "POSITIONBLOCKID", "value": "Map" },
+				{ "columnName": "POSITIONBLOCK", "value": "Map" },
+				{ "columnName": "INSTRUMENTID", "value": "Map" },
+				{ "columnName": "INSTRUMENT", "value": "Map" },
+				{ "columnName": "INSTRUMENTDESC", "value": "Map" },
+				{ "columnName": "FINANCIALTYPECODE", "value": "Map" },
+				{ "columnName": "FINANCIALTYPE", "value": "Map" },
+				{ "columnName": "CURRENCYID", "value": "Map" },
+				{ "columnName": "CURRENCY", "value": "Map" },
+				{ "columnName": "SECTOR", "value": "Map" },
+				{ "columnName": "MANAGEMENTCOMMITTEEROLLUPID", "value": "Map" },
+				{ "columnName": "MANAGEMENTCOMMITTEEROLLUP", "value": "Map" },
+				{ "columnName": "STRATEGYCODE", "value": "Map" },
+				{ "columnName": "STRATEGY", "value": "Map" },
+				{ "columnName": "TRADERNAME", "value": "Map" },
+				{ "columnName": "QUANTITY", "value": "Map" },
+				{ "columnName": "TRADEFACTOR", "value": "Map" },
+				{ "columnName": "FX", "value": "Map" },
+				{ "columnName": "PRICE", "value": "Map" },
+				{ "columnName": "COSTLOCAL", "value": "Map" },
+				{ "columnName": "COST", "value": "Map" },
+				{ "columnName": "MV", "value": "Map" },
+				{ "columnName": "DTD_MTM", "value": "Map" },
+				{ "columnName": "DTD_INTEREST", "value": "Map" },
+				{ "columnName": "DTD_REPOINTEREST", "value": "Map" },
+				{ "columnName": "DTD_DIVIDENDINTEREST", "value": "Map" },
+				{ "columnName": "DTD_BANKDEBTFEE", "value": "Map" },
+				{ "columnName": "DTD_PORTFOLIOFINANCECTC", "value": "Map" },
+				{ "columnName": "DTD_MISCELLANEOUSCTC", "value": "Map" },
+				{ "columnName": "DTD_BACKOFFICECHARGES", "value": "Map" },
+				{ "columnName": "DTD_ISTCOMMISSIONS", "value": "Map" },
+				{ "columnName": "DTD_TOTALPL", "value": "Map" },
+				{ "columnName": "STRATEGYGROUP", "value": "Map" },
+				{ "columnName": "BUSINESSLINE_KEY", "value": "Map" },
+				{ "columnName": "STRATEGYSUBGROUP", "value": "Map" },
+				{ "columnName": "MASTERREGION", "value": "Map" },
+				{ "columnName": "PBTYPE", "value": "Map" },
+				{ "columnName": "ALLOCATIONMETHOD", "value": "Map" },
+				{ "columnName": "ALLOCATIONREFERENCE", "value": "Map" },
+				{ "columnName": "PARENTPB", "value": "Map" },
+					{ "columnName": "AsOfDateTime", "value": "Default", "valueType": "TimeStamp" },
+					{ "columnName": "ClientId", "value": "Param", "sourceParam": "-client", "sourceParamIndex": 0 }
+					
+				]
+			}
+		}
+	}
+}

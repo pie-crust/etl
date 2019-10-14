@@ -1,0 +1,96 @@
+{
+
+"dump":{
+	"gfin": {
+		"Dir": {
+			"dumpDir"			: ["{optparam_0}", 1],
+			"dumpFileFormat"	: ["{cli*_source}_{cli*tss}.csv", 2],
+			
+			
+			"recordDelimiter"	: "\n",
+			"columnDelimiter"	: "|",
+			
+			"writeHeader"		: 2,
+				"headerFormat"	: {"line1":"column", "line2": "type"},
+				"translateType"	: {"<type 'int'>": "int", "<type 'long'>": "long", "<type 'float'>": "float", "<type 'str'>": "varchar",  "<type 'datetime.datetime'>": "timestamp"}
+		}
+	}
+},
+
+"target":{
+
+	"gfin": {	
+		"Vertica": {
+			"targetDb"			: "Vertica",
+			"targetTable"		: [ ],
+			"targetSchema"		: "CIGRpt",
+			
+			"SnapMoveLocation"	: "rdm/snowflakeload/updates_NEW/",
+			
+			"insertStmt"		: ["INSERT INTO {targetSchema}.{targetTable} ({cli*to_cols}) values ({cli*to_quotes})", 4],
+			"exitOnExtraFileTables"		: 1,
+			"exitOnExtraConfigTables"	: 0,
+			"targetTables"		: {
+				"PK"			: { "table_name" : "gtxMasterPKData", "column_name" : "InstrumentID", "create_file": 1  },
+				"EnergyAttributes"	: { },
+				"SchedulePeriod"	: { },
+				"Instrument"		: { },
+				"Listing"			: { },
+				"ContractualInfo"	: { },
+				"InstrumentLockup"	: { },
+				"Classification"	: { },
+				"Barrier"			: { },
+				"SwapLeg"			: { },
+				"CapitalAmount"		: { },
+				"InstrumentSchedule": { },
+				"InvolvedParty"		: { },
+				"BasketComponent"	: { },
+				"ScheduleAmount"	: { },
+				"TradeFactor"		: { },
+				"Identifier"		: { },
+				"SecurityFlagInfo"	: { },
+				"FormPF"			: { },
+				"InstrumentEvent"	: { },
+				"LimitStructure"	: { },
+				"ScheduleDate"		: { },
+				"IssueInfo"			: { },
+				"CollateralBalance"	: { },
+				"ETCRates"			: { },
+				"InstrumentRole"	: { },
+				"InstrumentStrategy": { },
+				"SecurityRating"	: { },
+				"ClassificationList": { },
+				
+				"VariableFixingSpread"		: { },
+				"ScheduleAssociation"		: { },
+				"InstrumentComposition"		: { },
+				"InstrumentClientNotes"		: { },
+				"InstrumentAdditionalFee"	: { },
+				"ScheduleUnderlyingParams"	: { },
+				"OTCInstrumentAttributes"	: { },
+				
+				"InstrumentCustomAttributeIdentifier": { }
+			},
+			"_targetTables"		: {
+				"PK"			: { "table_name" : "gtxMasterPKData" , "column_name" : "InstrumentID", "create_file": 1 },
+				"Tx" 			: { "formatColumns" : ["TxMasterGUID", "SwapEventGUID"], "FORMAT" : "hex"},
+				"TxSide"		: { },
+				"TxFee"			: { },
+				"TxConfirm"		: { },
+				"TxStatus"		: { },
+				"TxFinancingRate"		: { },
+				"TxFinancingRateHist"	: { },
+				"TxExtendedAttributes"	: { },
+				"TxFinancingAttributes"	: { },
+				"TxFinancingHistoryRate": { },
+				"TxPositionBlockAllocation"	: { }
+			},
+			"masterTableTag"	: "PK",
+			"doNotDeleteTables" : ["TxFinancingRateHist"],
+			"doNotLoadTables"	: ["TxFinancingRate",  "TxFinancingRateHist"]
+		}
+	}
+
+}
+
+}

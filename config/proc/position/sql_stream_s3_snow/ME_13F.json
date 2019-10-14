@@ -1,0 +1,65 @@
+{	
+	"s3":{
+		"targetBucket":{"env_var": "DB_SNOWFLAKE_BUCKET"},
+		"targetDir": "racct",
+		"maxRecordsInFile": 200000,
+		"writeBufferSize": 200000
+		},
+	"target":{
+		"targetDb"			: "Snowflake",
+		"targetTable"		: "ME_13F",
+		"targetStage"		: {"env_var": "DB_SNOWFLAKE_STAGE"},
+		"targetWarehouse"	: "LOAD_WH",
+		"targetRole"		: "AccountingBI_W",
+		"targetDatabase"	: "ACCOUNTINGBI",
+		"targetSchema"		: "POSITION",
+		"purgeStmt"			: ["DELETE from {targetSchema}.{targetTable} WHERE AsOfDateTime < '{cli_asod}' AND AccountingDate = '{colparam_AccountingDate}'  ", 4],
+		"copyStmt"			: ["COPY INTO {targetSchema}.{targetTable} FROM '@{targetStage}/{targetTable}/'FILES=('{cli_files}')",5]
+		},
+	"source":{
+		"sourceDb": "SQLServer", 
+		"procName": "CIGActgH.sp_Util_13F_WRAPPER",	
+		"sourceStmt":  [ "set nocount on; SET ANSI_WARNINGS OFF; select * into #gtt_Util_13FAdvisors from Accounting.Template.gtt_Util_13FAdvisors; select * into #gtt_Util_BusinessUnitFilter from Accounting.Template.gtt_Util_BusinessUnitFilter; select * into #gtt_Util_13F  from Accounting.Template.gtt_Util_13F; select * into #gtt_Util_FinancialTypeFilter  from Accounting.Template.gtt_Util_FinancialTypeFilter; select * into #gtt_Util_AccountSubTypeFilter from Accounting.Template.gtt_Util_AccountSubTypeFilter;  exec {procName} '{cli_paramlist}'",
+								2],			
+		"columnMappings":  [
+				{ "columnName": "InstrumentID", "value": "Map" },
+				{ "columnName": "BusinessUnit", "value": "Map" },
+				{ "columnName": "BusinessUnitId", "value": "Map" },
+				{ "columnName": "Advisor", "value": "Map" },
+				{ "columnName": "Issuer_13F", "value": "Map" },
+				{ "columnName": "MSymbol", "value": "Map" },
+				{ "columnName": "MsymbolDesc", "value": "Map" },
+				{ "columnName": "Description13F", "value": "Map" },
+				{ "columnName": "FinancialType13F", "value": "Map" },
+				{ "columnName": "FinancialType", "value": "Map" },
+				{ "columnName": "FinancialTypeCode", "value": "Map" },
+				{ "columnName": "SwapType", "value": "Map" },
+				{ "columnName": "Cusip", "value": "Map" },
+				{ "columnName": "UnderlyingCusip", "value": "Map" },
+				{ "columnName": "Is13FSec", "value": "Map" },
+				{ "columnName": "IsDefaulted", "value": "Map" },
+				{"columnName": "PosMarketVal", "value": "Map"},
+				{"columnName": "PosQty","value": "Map"},
+				{"columnName": "ConvRatio","value": "Map"},
+				{"columnName": "UnderlyingKey","value": "Map"},
+				{"columnName": "UnderlyingSymbol","value": "Map"},
+				{"columnName": "UnderlyingDesc","value": "Map"},
+				{"columnName": "UnderlyingPrice","value": "Map"},
+				{"columnName": "UnderlyingTf","value": "Map"},
+				{"columnName": "QtyCalcBasedonRatio","value": "Map"},
+				{"columnName": "MVCalcBasedonRatio","value": "Map"},
+				{"columnName": "PosTf","value": "Map"},
+				{"columnName": "FaceQty","value": "Map"},
+				{"columnName": "FaceCurrentQty","value": "Map"},
+				{"columnName": "Qty_13F","value": "Map"},
+				{"columnName": "MV_13F","value": "Map"},
+				{"columnName": "Is13FReportable","value": "Map"},
+				{"columnName": "LongShortInd","value": "Map"},				
+				{ "columnName": "AccountingDate", "value": "Param", "sourceParam": "-accDate", "sourceParamIndex": 0 },
+				{ "columnName": "AsOfDateTime", "value": "Default", "valueType": "TimeStamp" }
+			]
+		},		
+	"prefixProcExecutionOption": [ 
+		" SET NOCOUNT ON; SET ANSI_WARNINGS OFF;"
+	]		
+}

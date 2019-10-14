@@ -1,0 +1,59 @@
+{	
+	"s3":{
+		"targetBucket": {"env_var": "DB_SNOWFLAKE_BUCKET"},
+		"targetDir": "racct",
+		"maxRecordsInFile": 250000,
+		"writeBufferSize": 250000
+		},
+	"target":{
+		"targetDb"			: "Snowflake",
+		"targetTable"		: "ME_Position_SD",
+		"targetStage"		: {"env_var": "DB_SNOWFLAKE_STAGE"},
+		"targetWarehouse"	: "LOAD_WH",
+		"targetRole"		: "AccountingBI_W",
+		"targetDatabase"	: "ACCOUNTINGBI",
+		"targetSchema"		: "POSITION",
+		"purgeStmt"			: ["DELETE from {targetSchema}.{targetTable} WHERE AsOfDateTime < '{cli_asod}' AND AccountingDate = '{colparam_AccountingDate}' AND Client='{colparam_Client}' AND PosType = '{colparam_PosType}' AND Stage = '{colparam_Stage}' ", 7],
+		"copyStmt"			: ["COPY INTO {targetSchema}.{targetTable} FROM '@{targetStage}/{targetTable}/'FILES=('{cli_files}')",5]
+
+		},
+	"source":{
+		"sourceDb": "SQLServer", 
+		"procName": "CIGActgH.spSettleDatePosition_WRAPPER",	
+		"sourceStmt":  [ "set nocount on; SET ANSI_WARNINGS OFF;   exec {procName} '{cli_paramlist}'",
+								2],			
+		"columnMappings": [
+				{ "columnName": "Account", "value": "Map" },
+				{ "columnName": "PSLocalCurrencyCode", "value": "Map" },
+				{ "columnName": "Subaccount", "value": "Map" },
+				{ "columnName": "FinancialType", "value": "Map" },
+				{ "columnName": "Instrument", "value": "Map" },
+				{ "columnName": "InstrumentDesc", "value": "Map" },
+				{ "columnName": "TradeFactor", "value": "Map" },
+				{ "columnName": "SDQty", "value": "Map" },
+				{ "columnName": "SDCurrentQty", "value": "Map" },
+				{ "columnName": "LongShort_E", "value": "Map" },
+				{ "columnName": "SDMV", "value": "Map" },
+				{ "columnName": "Fx", "value": "Map" },
+				{ "columnName": "BaseSDMV", "altColName":"ISNULL(T.SDMV,0.0)*T.FX", "value": "Map" },
+				{ "columnName": "PositionID", "value": "Map" },
+				{ "columnName": "BusinessUnitID", "value": "Map" },
+				{ "columnName": "TRSInstrument", "value": "Map" },
+				{ "columnName": "TRSInstrumentDesc", "value": "Map" },
+				{ "columnName": "NotionalFlag_E", "value": "Map" },
+				{ "columnName": "SwapType_E", "value": "Map" },
+				{ "columnName": "Price", "value": "Map" },
+				{ "columnName": "PriceSource", "value": "Map" },
+				{ "columnName": "LastID", "value": "Map" },
+				{ "columnName": "LastModified", "value": "Map" },
+				{ "columnName": "AccountingDate", "value": "Param", "sourceParam": "-accDate", "sourceParamIndex": 1 },
+				{ "columnName": "PosType", "value": "Param", "sourceParam": "-posType", "sourceParamIndex": 3 },
+				{ "columnName": "Stage", "value": "Param", "sourceParam": "-stage", "sourceParamIndex": 2 },
+				{ "columnName": "AsOfDateTime", "value": "Default", "valueType": "TimeStamp" },
+				{ "columnName": "Client", "value": "Param", "sourceParam": "-client", "sourceParamIndex": 0 }
+			]
+		},		
+	"prefixProcExecutionOption": [ 
+		" SET NOCOUNT ON; SET ANSI_WARNINGS OFF;"
+	]		
+}

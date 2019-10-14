@@ -1,0 +1,69 @@
+{	
+	"source":{
+		"IQ_DEV":{
+			"sourceDb"			: "IQ_DEV",
+			"sourceStmt"		: [],
+			"sourceQueryFile"	: []
+			},
+		"IQ_PROD":{
+			"sourceDb"			: "IQ_PROD",
+			"sourceStmt"		: [],
+			"sourceQueryFile"	: []
+			}
+	},
+	"target": {
+		"IQ_DEV": {
+			"targetDir"			: [ "{optparam_1}/{source*sourceDb}_{cli*tss}", 3 ],
+			"targetFileFormat"	: [ "{source*sourceDb}.{cli*tss}.csv", 2 ],
+				"writeHeader"		 	: 1,
+					"recordDelimiter"	: "\n",
+					"columnDelimiter"	: "|",
+					"headerFormat"		: "column:type",
+					"translateType"		: {"<type 'int'>": "int", "<type 'long'>": "long"}
+
+			},
+		"IQ_PROD": {
+			"targetDir"			: [ "{optparam_1}/{source*sourceDb}_{cli*tss}", 3 ],
+			"targetFileFormat"	: [ "{source*sourceDb}.{cli*tss}.csv", 2 ],
+				"writeHeader"			: 1,
+					"recordDelimiter"	: "\n",
+					"columnDelimiter"	: "|",
+					"headerFormat"		: "column:type",
+					"translateType"		: {"<type 'int'>": "int", "<type 'long'>": "long"}
+
+			}
+		
+	},
+	
+	"teardown":{
+		"teardownQueryFile": [ "{optparam_0}", 1 ],
+		"source":{
+			"IQ_DEV":{
+				"sourceDir"			: [ "{optparam_1}/{source*sourceDb}_{cli*tss}", 3 ],
+				"skipHeader"		 : 0,
+				"recordDelimiter"	 : "\n",
+				"columnDelimiter"	 : "|",
+				"headerFormat"		 : "column:type"
+				},
+			"IQ_PROD":{
+				"sourceDir"			: [ "{optparam_1}/{source*sourceDb}_{cli*tss}", 3 ],
+				"skipHeader"		 : 0,
+				"recordDelimiter"	 : "\n",
+				"columnDelimiter"	 : "|",
+				"headerFormat"		 : "column:type"
+				}
+		},
+		"target":{
+			"IQ_DEV":{
+				"targetDb"		: "SQLite",	
+				"targetTable"	: ["{cli*_source}_{cli*tss}", 2 ],
+				"insertStmt"	: ["INSERT INTO {targetTable} ({cli*to_cols}) values ({cli*to_quotes})", 3]
+			},
+			"IQ_PROD":{
+				"targetDb"		: "SQLite",	
+				"targetTable"	: ["{cli*_source}_{cli*tss}", 2 ],
+				"insertStmt"	: ["INSERT INTO {targetTable} ({cli*to_cols}) values ({cli*to_quotes})", 3]
+			}
+			}
+	}
+}

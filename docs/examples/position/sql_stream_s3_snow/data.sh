@@ -1,0 +1,1 @@
+~/python27/bin/python ./cli.py -nopp 18  -dcf config/db_config.DEV.json -pcf config/proc/position/sql_stream_s3_snow/ME_Position_SD.json --proc_params 223907 01/29/2018 'EOD' 'ACCT' "*" "*" "*" "*" "*" "*" "*" "*" "*" "*" "*" "*" "*" "*"

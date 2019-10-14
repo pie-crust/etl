@@ -1,0 +1,34 @@
+{
+
+"dump":{
+	"gfin": {
+		"Dir": {
+			"dumpDir"			: ["/home/s_dev_racct/ab_g3/gfin/gfin.20190805-020149249229", 0],
+			"dumpFileFormat"	: ["gfin.Barrier.out", 0],
+			"_dumpDir"			: ["/home/s_dev_racct/ab_g3/gfin/gfin.Barrier", 0],
+			"_dumpFileFormat"	: ["gfin.Barrier.out", 0],			
+			
+			
+			"recordDelimiter"	: "\n",
+			"columnDelimiter"	: "|",
+			
+			"writeHeader"		: 2,
+				"headerFormat"	: {"line1":"column", "line2": "type"},
+				"translateType"	: {"<type 'int'>": "int", "<type 'long'>": "long", "<type 'float'>": "float", "<type 'str'>": "varchar",  "<type 'datetime.datetime'>": "timestamp"}
+		}
+			
+	}
+},
+
+"target":{
+	
+	"gfin": {
+		"SQLite":{
+			"targetLiteDir"		: [ "dump/lite/{cli*tss}/", 1 ],
+			"targetDb"		: "SQLite",	
+			"targetTable"	: ["Barrier", 0 ],
+			"insertStmt"	: ["INSERT INTO {targetTable} ({cli*to_cols}) values ({cli*to_quotes})", 3]
+		}
+	}
+}
+}

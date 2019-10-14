@@ -1,0 +1,57 @@
+
+{
+
+"rest":{
+	"IQ_Proc": {	
+		"REST": {		
+			"gaToken"	: ["{optparam_1}", 1],
+			"sourceUrl" : "http://lp-dbn-borec004.homegroup.com:10030/getMiscDiffs"
+			}
+		}	
+	},
+"target":{
+	"IQ_Proc": {	
+		"IQ": {
+			"targetDb"			: "IQ_DEV",
+			"accountingDate"	: ["{optparam_0}", 1],
+			"accountingDateFmt"	: "%Y/%m/%d",
+			
+			"targetTablePrefix"	: "RC_Difference_Cash",
+			"targetTableFmt"	: ["{targetTablePrefix}_{cli*acct_year}_{cli*acct_mon}", 3],
+			"targetTable"		: "",
+
+			"targetSchema"		: "Position",
+			"insertStmt"		: ["INSERT INTO {targetSchema}.{targetTable} ({cli*to_cols}) values ({cli*to_quotes})", 4],
+			
+			"preCountTableStmt"	: ["SELECT count(*) cnt FROM {targetSchema}.{targetTablePrefix} WHERE AsOfDateTime < '{cli*asod}' AND AccountingDate = '{optparam_0}' ", 4],
+			"preCountTablePartitionStmt"	: ["SELECT count(*) cnt FROM {targetSchema}.{targetTable} WHERE AsOfDateTime < '{cli*asod}' AND AccountingDate = '{optparam_0}' ", 4],
+			"afterCountStmt"	: ["SELECT count(*) cnt FROM {targetSchema}.{targetTable} WHERE AsOfDateTime = '{cli*asod}' AND AccountingDate = '{optparam_0}' ", 4],
+			"purgeStmt"			: ["DELETE from {targetSchema}.{targetTable} WHERE AsOfDateTime < '{cli*asod}' AND AccountingDate = '{optparam_0}' ", 4],
+			"rollbackStmt"		: ["DELETE from {targetSchema}.{targetTable} WHERE AsOfDateTime = '{cli*asod}' AND AccountingDate = '{optparam_0}' ", 4],
+			"monthEndStmt"		: ["SELECT MAX(DailyDate) as MonthEndDate FROM CIGRptV.DailyDate WHERE IsWeekday = 1   AND ((Month(DailyDate) = 12 and Year(DailyDate)= Year(getdate())-1 and  Month(getdate()) =1) or    (Month(DailyDate) = Month(getdate()) -1 and  Year(DailyDate)= Year(getdate()) and Month(getdate()) >1) ) GROUP BY Year(DailyDate),Month(DailyDate) ORDER BY 1",0],
+			
+			"insertChunkSize"	: 900,
+			"ignoreSourceColumns" : ["AsOfDate"],
+			"columnMap"	: {
+				"NetSettlement":["NetSettlement",		"numeric"	], 
+				"NetSettlement_USD":			["NetSettlement_USD", 		"varchar"	], 
+				"category":		["Account", 	"varchar"	], 
+				"clientName":	["Client", 		"varchar"	], 
+				"compareType":	["CompareType", "varchar"	], 
+				"recID":		["RecID", 		"varchar"	],
+				"groupStatus":	["GroupStatus",	"numeric"	],
+				
+				
+				"SettlementCurrency":["SettlementCurrency",	"varchar"], 
+				"AccountSubType":	 ["AccountSubType", "varchar"],
+				"AccountingDate":	 ["AccountingDate", "datetime", ["{optparam_0}",1]],
+				"AsOfDateTime"	:	 ["AsOfDateTime", 	"datetime", ["{cli*asod}", 	1]]
+			}
+		}
+	}
+}
+
+
+
+	
+}
