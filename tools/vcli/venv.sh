@@ -1,6 +1,0 @@
-export VERTICA_DATABASE=VDGMBO1
-export VERTICA_USER=s_dev_rdm
-export VERTICA_SERVER="VDGMBO1.homegroup.com"
-export VERTICA_SCHEMA=CIGRpt
-
-export VERTICA_KERBEROS_SERVICE_NAME=vertica
